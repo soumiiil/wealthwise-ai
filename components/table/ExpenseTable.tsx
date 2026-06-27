@@ -1,13 +1,16 @@
 import { Expense } from "@/types/expense";
+import EditExpenseDialog from "../dialog/EditExpenseDialog";
 
 type Props = {
   expenses: Expense[];
   onDelete: (id: number) => void;
+  onExpenseUpdated: () => void;
 };
 
 export default function ExpenseTable({
   expenses,
   onDelete,
+  onExpenseUpdated,
 }: Props) {
   return (
     <div className="bg-white rounded-xl shadow p-6 h-96 overflow-auto">
@@ -48,12 +51,21 @@ export default function ExpenseTable({
 </td>
 
 <td className="text-center">
-  <button
-    onClick={() => onDelete(expense.id)}
-    className="text-red-500 hover:text-red-700"
-  >
-    🗑️
-  </button>
+  <div className="flex justify-center gap-3">
+
+    <EditExpenseDialog
+      expense={expense}
+      onExpenseUpdated={onExpenseUpdated}
+    />
+
+    <button
+      onClick={() => onDelete(expense.id)}
+      className="text-red-500 hover:text-red-700"
+    >
+      🗑️
+    </button>
+
+  </div>
 </td>
 
             </tr>

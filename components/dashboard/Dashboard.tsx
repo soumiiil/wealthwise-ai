@@ -123,9 +123,10 @@ export default function Dashboard() {
         <ExpenseChart expenses={expenses} />
 
         <ExpenseTable
-          expenses={expenses}
-          onDelete={deleteExpense}
-        />
+  expenses={expenses}
+  onDelete={deleteExpense}
+  onExpenseUpdated={fetchExpenses}
+/>
 
       </div>
 

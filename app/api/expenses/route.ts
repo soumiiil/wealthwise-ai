@@ -39,3 +39,20 @@ export async function DELETE(request: Request) {
     success: true,
   });
 }
+
+export async function PUT(request: Request) {
+  const body = await request.json();
+
+  const expense = await prisma.expense.update({
+    where: {
+      id: body.id,
+    },
+    data: {
+      title: body.title,
+      amount: Number(body.amount),
+      category: body.category,
+    },
+  });
+
+  return NextResponse.json(expense);
+}
