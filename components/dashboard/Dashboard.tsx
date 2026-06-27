@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { expenses as initialExpenses } from "@/data/expenses";
+import { useEffect, useState } from "react";
+import { Expense } from "@/types/expense";
 
 import {
   Wallet,
@@ -16,19 +16,40 @@ import AIInsights from "../ai/AIInsights";
 import AddExpenseDialog from "../dialog/AddExpenseDialog";
 
 export default function Dashboard() {
+  const [expenses, setExpenses] = useState<Expense[]>([]);
 
-  const [expenses, setExpenses] = useState(initialExpenses);
+  async function fetchExpenses() {
+    try {
+      const res = await fetch("/api/expenses");
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch expenses");
+      }
+
+      const data = await res.json();
+      setExpenses(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    fetchExpenses();
+  }, []);
 
   const totalExpenses = expenses.reduce(
-  (sum, expense) => sum + expense.amount,
-  0
-);
+    (sum, expense) => sum + expense.amount,
+    0
+  );
 
-const monthlyBudget = 15000;
+  const monthlyBudget = 15000;
 
-const savingsScore = Math.round(
-  ((monthlyBudget - totalExpenses) / monthlyBudget) * 100
-);
+  const savingsScore = Math.max(
+    0,
+    Math.round(
+      ((monthlyBudget - totalExpenses) / monthlyBudget) * 100
+    )
+  );
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -45,10 +66,7 @@ const savingsScore = Math.round(
           </p>
         </div>
 
-        <AddExpenseDialog
-  expenses={expenses}
-  setExpenses={setExpenses}
-/>
+        <AddExpenseDialog />
 
       </div>
 
@@ -63,7 +81,7 @@ const savingsScore = Math.round(
 
         <StatCard
           title="Monthly Budget"
-          value="₹15,000"
+          value={`₹${monthlyBudget}`}
           icon={<PiggyBank size={28} />}
           color="bg-green-500"
         />
