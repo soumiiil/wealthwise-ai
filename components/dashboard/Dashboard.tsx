@@ -33,6 +33,27 @@ export default function Dashboard() {
     }
   }
 
+  async function deleteExpense(id: number) {
+    try {
+      const response = await fetch("/api/expenses", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete expense");
+      }
+
+      fetchExpenses();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete expense");
+    }
+  }
+
   useEffect(() => {
     fetchExpenses();
   }, []);
@@ -67,8 +88,8 @@ export default function Dashboard() {
         </div>
 
         <AddExpenseDialog
-  onExpenseAdded={fetchExpenses}
-/>
+          onExpenseAdded={fetchExpenses}
+        />
 
       </div>
 
@@ -101,7 +122,10 @@ export default function Dashboard() {
 
         <ExpenseChart expenses={expenses} />
 
-        <ExpenseTable expenses={expenses} />
+        <ExpenseTable
+          expenses={expenses}
+          onDelete={deleteExpense}
+        />
 
       </div>
 

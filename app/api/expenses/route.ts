@@ -25,3 +25,17 @@ export async function POST(request: Request) {
 
   return NextResponse.json(expense);
 }
+
+export async function DELETE(request: Request) {
+  const { id } = await request.json();
+
+  await prisma.expense.delete({
+    where: {
+      id,
+    },
+  });
+
+  return NextResponse.json({
+    success: true,
+  });
+}
