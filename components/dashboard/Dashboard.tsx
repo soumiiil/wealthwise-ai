@@ -66,7 +66,9 @@ export default function Dashboard() {
           </p>
         </div>
 
-        <AddExpenseDialog />
+        <AddExpenseDialog
+  onExpenseAdded={fetchExpenses}
+/>
 
       </div>
 
